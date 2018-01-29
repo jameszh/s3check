@@ -21,9 +21,9 @@ Options:
 ```
 
 ```
-$ s3check --bucket s3bucket
-[*] List objects in the bucket s3bucket: Pass
-[*] Write to the bucket s3bucket: Pass
-[*] Read from the bucket s3bucket: Pass
-[*] Delete object from bucket s3bucket: Pass
+$ s3check --bucket <a s3 bucket>
+[*] Can list objects in the bucket <a s3 bucket>: PASS
+[*] Can write objects in the bucket <a s3 bucket>: PASS
+[*] Can read objects in the bucket <a s3 bucket>: PASS
+[*] Can delete objects in the bucket <a s3 bucket> PASS
 ```

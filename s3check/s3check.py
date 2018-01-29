@@ -7,6 +7,13 @@ import boto3
 import click
 from botocore.client import ClientError
 
+CHECK = "*"
+UNCHECK = " "
+CAN_LIST = "[{}] Can list objects in the bucket {}: {}"
+CAN_WRITE = "[{}] Can write objects in the bucket {}: {}"
+CAN_READ = "[{}] Can read objects in the bucket {}: {}"
+CAN_DELETE = "[{}] Can delete objects in the bucket {}: {}"
+
 s3 = boto3.resource('s3')
 
 temp_file = NamedTemporaryFile(delete=False)
@@ -67,7 +74,7 @@ def can_list(bucket_name):
     try:
         bucket = s3.Bucket(bucket_name)
         response = bucket.objects.limit(count=10)
-        if len(list(response)) >=0:
+        if len(list(response)) >= 0:
             return True
     except ClientError:
         return False
@@ -81,24 +88,24 @@ def main(bucket):
         exit(1)
 
     if not can_list(bucket):
-        print("[ ] List objects in the bucket {}: Fail".format(bucket))
+        print(CAN_LIST.format(UNCHECK, bucket, 'FAIL'))
         exit(1)
-    print("[*] List objects in the bucket {}: Pass".format(bucket))
+    print(CAN_LIST.format(CHECK, bucket, 'PASS'))
 
     if not can_write(bucket, temp_file):
-        print("[ ] Write to the bucket {}: Fail".format(bucket))
+        print(CAN_WRITE.format(UNCHECK, bucket, 'FAIL'))
         exit(1)
-    print("[*] Write to the bucket {}: Pass".format(bucket))
+    print(CAN_WRITE.format(CHECK, bucket, 'PASS'))
 
     if not can_read(bucket, temp_file):
-        print("[ ] Read from the bucket {}: Fail".format(bucket))
+        print(CAN_READ.format(UNCHECK, bucket, 'FAIL'))
         exit(1)
-    print("[*] Read from the bucket {}: Pass".format(bucket))
+    print(CAN_READ.format(CHECK, bucket, 'PASS'))
 
     if not can_delete(bucket, temp_file):
-        print("[ ] Delete object from bucket {}: Fail".format(bucket))
+        print(CAN_DELETE.format(UNCHECK, bucket, 'FAIL'))
         exit(1)
-    print('[*] Delete object from bucket {}: Pass'.format(bucket))
+    print(CAN_DELETE.format(CHECK, bucket, 'PASS'))
 
     os.unlink(temp_file.name)
 
